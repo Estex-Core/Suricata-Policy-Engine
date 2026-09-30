@@ -150,8 +150,14 @@ pytest
 
 ## Documentation
 
-[همان بخش Documentation قبلی را اینجا نگه دار]
-
+- [Documentation index](docs/README.md)
+- [How it works](docs/HOW-IT-WORKS.md)
+- [Policy reference](docs/POLICY-REFERENCE.md)
+- [Profiles](docs/PROFILES.md)
+- [Release notes 2.0.0rc2](docs/RELEASE-NOTES-2.0.0rc2.md)
+- [Backend audit 2.0.0b3](docs/BACKEND-AUDIT-2.0.0b3.md)
+- [Current release notes](RELEASE-NOTES.md)
+  
 ## Contributing
 
 Contributions, improvements, and security feedback are welcome.

@@ -7,23 +7,21 @@ A policy-driven engine for tuning Suricata rulesets with safe automation, threat
 
 Have you ever updated your Suricata rules and wondered:
 
-"Do I really need all 60,000 rules?"
+“Do I really need all 60,000 rules?”
 
-Maybe your network is not that large..
-Maybe the available resources are not enough for every alert..
-Or maybe you have hundreds of rules enabled for products that do not even exist in your environment...
+Maybe your network is not that large.
+Maybe the available resources are not enough for every alert.
+Or maybe you have hundreds of rules enabled for products that do not even exist in your environment.
 
-This is where **SuriTuner** comes in. 😁
+This is where SuriTuner comes in. 😁
 
 SuriTuner is a policy-driven engine that helps you tune Suricata rulesets with safe automation, threat-hunting profiles, dependency-aware optimization, and explainable security decisions.
 
-Define how your environment should be protected — SuriTuner translates that intent into an effective Suricata ruleset.
-
 Your policy. Your environment. Your Suricata ruleset.
 
-The engine applies explicit policies based on rule categories, asset context, semantic selectors, dependencies, and security requirements to generate optimized rulesets.
+The engine applies explicit policies based on rule categories, asset context, semantic selectors, dependencies, and security requirements to generate an effective ruleset.
 
-It does not provide a fixed "golden ruleset". Instead, policies are reapplied to updated Suricata feeds so upstream rule changes remain part of the workflow.
+It does not provide a fixed “golden ruleset.” Instead, policies are reapplied to updated Suricata feeds so upstream rule changes remain part of the workflow.
 
 ## Features
 

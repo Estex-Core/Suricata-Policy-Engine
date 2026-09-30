@@ -1,0 +1,43 @@
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments / local env
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/
+*.whl
+*.tar.gz
+*.zip
+*.pyz
+
+# Local runtime / audit artifacts
+*.report.json
+suricata-policy-engine-feed-audit.json
+suricata-policy-engine-feed-audit.md
+*.tmp
+*.bak
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~

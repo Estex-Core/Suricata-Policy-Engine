@@ -1,0 +1,27 @@
+name: Feature request
+description: Propose a change to policy logic, auditability, UX, or packaging.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Describe the operational problem rather than only the desired UI/control.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety / false-negative considerations
+      description: Explain how the change should avoid silently disabling useful detection or bypassing dependency restoration.
+  - type: textarea
+    id: tests
+    attributes:
+      label: Suggested regression cases

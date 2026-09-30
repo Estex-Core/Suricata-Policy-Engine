@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "created_at": "2026-09-23T15:30:19.854551+00:00",
+  "tracked_rules": {
+    "2001294": {
+      "category": "ET_INFO",
+      "rev": 6,
+      "msg": "ET INFO Dameware Remote Control Service Install",
+      "logic_sha256": "80d66753fdc95f54110bfa3f48178f6781e3956b0f3e05312f1ae356c54aa0be",
+      "raw_sha256": "93751ba71ac7e5925eb39c5b6d17450e6af0cc5944d32f6df37d0bd122850d8a"
+    },
+    "2009475": {
+      "category": "ET_INFO",
+      "rev": 13,
+      "msg": "ET INFO TeamViewer Dyngate User-Agent",
+      "logic_sha256": "d5ca1e667cb98b98201425fdd61190fc0f612de6e30523887cfc90398538b7fa",
+      "raw_sha256": "488b96892f472b8007758326e281b8557aaf1b16a5b1829586407380b525d7be"
+    },
+    "2010781": {
+      "category": "ET_INFO",
+      "rev": 4,
+      "msg": "ET INFO PsExec service created",
+      "logic_sha256": "78d5219158a42eec79655fba093aa32575a284f2831d3e9c941b12e023a51a73",
+      "raw_sha256": "3a1802cbc191c0fcac258a2709d56b010bad49933d4c7ddf1f79928b46271680"
+    },
+    "2010782": {
+      "category": "ET_INFO",
+      "rev": 3,
+      "msg": "ET INFO RemoteControlX rctrlx service created",
+      "logic_sha256": "dd08401f87a5ffbe3758cb4842f427519c7e496abdcef492e79d5a2431cd5e92",
+      "raw_sha256": "c466fba87037f34abffcca01a72167c66e3c9a4631d0f59e0c84699a2f9c7c31"
+    },
+    "2011865": {
+      "category": "ET_INFO",
+      "rev": 8,
+      "msg": "ET INFO Embedded Executable File in PDF - This Program Cannot Be Run in DOS Mode",
+      "logic_sha256": "15e2be53dfe1a3bc27ed1b371797333428abe102f3f9134a3eca9c0ae3637ec7",
+      "raw_sha256": "56c90048f3217bd10a85e5712673a978cd6b9b51e6ad046c14218485168ddc2d"
+    },
+    "2015857": {
+      "category": "ET_TFTP",
+      "rev": 5,
+      "msg": "ET TFTP Outbound TFTP Data Transfer with Cisco config",
+      "logic_sha256": "4d0b2fb936ec0b00d54d0c0a96c9ca7cc7f1c461a63801f78cd557d86479b216",
+      "raw_sha256": "687aed8fc08cbf9aeaf37ea47ee7b45b8e92d52599d30f4f95a8a619f116af5f"
+    },
+    "2017120": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Possible IPMI 2.0 RAKP Remote SHA1 Password Hash Retrieval RAKP message 1 with default BMC usernames (Admin|root|Administrator|USERID)",
+      "logic_sha256": "480055aac89b86d9f638843d615a205cfcbe10cbcd43bf5434a970e42fbab7f1",
+      "raw_sha256": "04f6abf13d738e1dff7999050b911a0b4e21a354a053cda3f5d613e7d4ad1a01"
+    },
+    "2024481": {
+      "category": "ET_TFTP",
+      "rev": 2,
+      "msg": "ET TFTP Outbound TFTP Data Transfer With Cisco Config 2",
+      "logic_sha256": "94389c3b1e182c86783827ff0f20ec9784fd2db486c547d1096d2ef4662663bb",
+      "raw_sha256": "9edce3da9a6e2892869f12bfd1c6074e3f9ab0d8394c0f50eb3ce178c2d4e8fa"
+    },
+    "2025009": {
+      "category": "ET_INFO",
+      "rev": 3,
+      "msg": "ET INFO PTsecurity Remote Desktop AeroAdmin handshake",
+      "logic_sha256": "22fa859a124e8c76925b6aa42424d2b1ad3a2d3ac637554f4a13ee72eef29717",
+      "raw_sha256": "dbdecf29f976cab9bc2b11a212a9bb79b35ee7d512a719c5e34f4bfce7f3fd91"
+    },
+    "2025709": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO SMB2 NT Create AndX Request For a DLL File - Possible Lateral Movement",
+      "logic_sha256": "95231582796199f11b93afb6787f04ba7273dde2713dc16f682180230f3e8dfe",
+      "raw_sha256": "752de406ff960ff45f88821577c7f7fb71a0bddba49bfe8955e3b1ecc8d0bd22"
+    },
+    "2025710": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO SMB NT Create AndX Request For a .sys File - Possible Lateral Movement",
+      "logic_sha256": "ab6208b1ccbe869ba14e0045d7b7009ef72334d6df162b16765afc2cc10c3349",
+      "raw_sha256": "83034518d467e84d0aef2016a66741900a8c278022fe2ea4ec2f02bde6cf538d"
+    },
+    "2025711": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO SMB2 NT Create AndX Request For a .sys File - Possible Lateral Movement",
+      "logic_sha256": "518e7b04cbc2eab350704e45d547da20ec2ea7c2f8efb132e3463199079d82be",
+      "raw_sha256": "f1a8dd7279dc5383a66e4f173294ad2db43a0427c688d5491c6b9a51103c10c0"
+    },
+    "2025712": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO SMB Remote AT Scheduled Job Create Request - Possible Lateral Movement",
+      "logic_sha256": "4810ed585d652e1e451aa758912782727f32315f9872a41ddff512917a09b5d2",
+      "raw_sha256": "a9c71c358e866fb4c3cd17ff2401d643d5e26c8a62deec0d2375ad9c046ef200"
+    },
+    "2025714": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO SMB Remote AT Scheduled Job Pipe Creation",
+      "logic_sha256": "c4173c4257d1430438df149b72f311a2d07865cb65a82fc963695a5da2baa3a0",
+      "raw_sha256": "95ab5aefffc5a55d6becb04baa800c61b3859ac34d967226265e607b2dd2ddde"
+    },
+    "2025719": {
+      "category": "ET_INFO",
+      "rev": 3,
+      "msg": "ET INFO Powershell Activity Over SMB - Likely Lateral Movement",
+      "logic_sha256": "a4352264f0c6a798dbab1630a4148105508763d1455173875b1aae6136feb6ee",
+      "raw_sha256": "cfcb7b7fcbd46ae088f071795756ddaed06454c9320bc704fcdff812c539587b"
+    },
+    "2025720": {
+      "category": "ET_INFO",
+      "rev": 3,
+      "msg": "ET INFO Powershell Command With Hidden Window Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "8039628a8180194e828a5b574991ccf8b7efedeaaf7cf0edc6afbcecec847801",
+      "raw_sha256": "48149a9acf109b8e1f224a5262d489b49dc7c509ab0239cdba0e991a87c22a10"
+    },
+    "2025721": {
+      "category": "ET_INFO",
+      "rev": 4,
+      "msg": "ET INFO Powershell Command With Encoded Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "6abd2ced786e65f1338cea466b3b08faf7800d20736f6ce8d3f8e429f7486261",
+      "raw_sha256": "48ace7000576f6cab6c361f564d542a979e662ed60e9949274a4fb83911a5561"
+    },
+    "2025722": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Powershell Command With No Profile Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "2152c2c79b5b06ca7dc43ba52360a0446c3daa4950f04c3a8b186b7446ccb7bf",
+      "raw_sha256": "337f731e1da99c7498fc1739f9eb7e452b7586b09272ea495c84fe45c263a1ab"
+    },
+    "2025723": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Powershell Command With Execution Bypass Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "a02fd873857328dc582c24899d75cdd008d2e6d2db9fda8bb6aa92e8f994604e",
+      "raw_sha256": "b4a70bf94de7ac46c88a0a14eff64eec5105bdfd84e074c560ec13f703be59e4"
+    },
+    "2025724": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Powershell Command With NonInteractive Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "633fa61b48da6dd910ec5b4e4cc6907efed1d5aaedf43f3bc3d95aef82eb358d",
+      "raw_sha256": "43a0be6ecfc56f57057c862f3ef7247eea6f09956904fb0c25867f606fbb4a9a"
+    },
+    "2025725": {
+      "category": "ET_INFO",
+      "rev": 3,
+      "msg": "ET INFO RunDll Request Over SMB - Likely Lateral Movement",
+      "logic_sha256": "5fd692c21d471fea56d0ffa704f1fe47538d0e4c7973ec91c5c5c8453637e4c8",
+      "raw_sha256": "352edf106a093758e9e7fa2c3125d5928ac6f71ce104b9ad05441a0f34025c61"
+    },
+    "2025726": {
+      "category": "ET_INFO",
+      "rev": 3,
+      "msg": "ET INFO WMIC WMI Request Over SMB - Likely Lateral Movement",
+      "logic_sha256": "1dc6ee1c2f2a816e13d48cc01befeeea91dc4781625d79c567e2b729f32f5047",
+      "raw_sha256": "6cf9c511f1a6f23186cc8e409af8b382a242ba123f154fb47d932274550fe876"
+    },
+    "2026849": {
+      "category": "ET_INFO",
+      "rev": 4,
+      "msg": "ET INFO WinRM wsman Access - Possible Lateral Movement",
+      "logic_sha256": "83b6aea345f53c83e8c0fc81a957ea9d1aad3736db0408375713f8fefa92a4e4",
+      "raw_sha256": "3940144cc6dbe09d108d32ea14f1b8c8b9743ca99963d1a523977946771f914d"
+    },
+    "2026879": {
+      "category": "ET_INFO",
+      "rev": 4,
+      "msg": "ET INFO Possible winexe over SMB - Possible Lateral Movement",
+      "logic_sha256": "d370f1f4f464a595d6246911bda7beda29c7e0fb36a1060739d6574fef839e10",
+      "raw_sha256": "b3e761140e970647ac33c90c5ff5c258f031b8ab25929b9bdbbe9f711f2e7da4"
+    },
+    "2027169": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Powershell Command With No Profile Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "dffff04124dcf6982d64f0fbeb6395e0a455e0a5b091f57ebeee81ec155252c7",
+      "raw_sha256": "58fc86e5b6cc637f52cab6fc417d12a371aad1e445e058c7647497a0155549ff"
+    },
+    "2027170": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Powershell Command With Hidden Window Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "17166f863522c2a33307792d955965aca2c92edd7b3e16b68b2c53628cc7b6ef",
+      "raw_sha256": "1a905f099fbc31247f4e6090f31dd2ff1f4913cdb590a56bb20273dfdc9fbfea"
+    },
+    "2027171": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Powershell Command With Execution Bypass Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "a0760fe06fd8d6224f4a00d09881aa11cfbf12267c0c5f5b3e3d115da4261253",
+      "raw_sha256": "9af33e416d4c8d67fc8673c5ff15026ca630ad88dde6bee01706a35202ad0adc"
+    },
+    "2027172": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Powershell Command With Encoded Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "ddeb8b024acd9bc8e8ab3247b20a3bc4ae57acf8cc470fe82faf001f8c33b7d9",
+      "raw_sha256": "ced820abcf39ac02193afd458e72e27e87e3b005de3c3805d20ca5b0169da439"
+    },
+    "2027173": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Powershell Command With NonInteractive Argument Over SMB - Likely Lateral Movement",
+      "logic_sha256": "93bdf39aa257be72bcafc9138d8a9bb4644cc84cae69b8e03304308f3a0e21e9",
+      "raw_sha256": "0f81949059b4681856823cdd2cb53b5b89fa0d351432ca3b698b1fcb81a99f21"
+    },
+    "2027174": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Command Shell Activity Over SMB - Possible Lateral Movement",
+      "logic_sha256": "6762d53dde7724b7e663ce73d00d933e639657141c4d2d8fb0cdd69ef769c08c",
+      "raw_sha256": "53d2ecb188c376b3999e1a14f961fe74b030857e9707fc2e634b0a760e55c1a4"
+    },
+    "2027175": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Command Shell Activity Over SMB - Possible Lateral Movement",
+      "logic_sha256": "1ab4003370242b4cb3ab909ed365b8c3380f806a1da4974735194ec7f7580d36",
+      "raw_sha256": "b1c462b4a571237b6f09d1c4d498f58c5876ba033f8bab9a5142350d3a0bd3f7"
+    },
+    "2027177": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Command Shell Activity Over SMB - Possible Lateral Movement",
+      "logic_sha256": "1a3c4d2b841a10c4753fceb61cfa7e0fd8b75357eb0f56fa1b97099a7531496d",
+      "raw_sha256": "645294300c5ff4a68660cddb3e3cb5067b7407391dd60b5091baded3c54e8a6f"
+    },
+    "2027178": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Command Shell Activity Using Comspec Environmental Variable Over SMB - Very Likely Lateral Movement",
+      "logic_sha256": "96a3578fd7b4d00a376a10e780d38107989cc2db3c7061194d7234ab7ea7967a",
+      "raw_sha256": "4bc9ec754a0f76773139c74b8d4b593bc59a05af01769b58c99e14f8fa438020"
+    },
+    "2027179": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Command Shell Activity Using Comspec Environmental Variable Over SMB - Very Likely Lateral Movement",
+      "logic_sha256": "fba08086bfac67c862efd4bcadf805b0e99d5a6c1e9731f8645bfe50a6ef03d9",
+      "raw_sha256": "d5eb6d0d08d646ba89301446b9bf2bce93d097a5fa1df465679b61fce3cc2ad6"
+    },
+    "2027180": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO WMIC WMI Request Over SMB - Likely Lateral Movement",
+      "logic_sha256": "8def96892ae611f2a059e3733261bc8e9c949d0b9807dddab0d28abe4b812436",
+      "raw_sha256": "7c49222f231d92e4fad43269a913b80543497d690e09450b3a39d724692152dc"
+    },
+    "2027181": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO WMIC WMI Request Over SMB - Likely Lateral Movement",
+      "logic_sha256": "850a9e1ab0c56e1e06daaab54bfe2eeffcfe90f0a48ecb98d45e22ffc4b402db",
+      "raw_sha256": "ba4018624027c083548d814aeee1711f2dc49774de2f7e8b89ca1cb602a3e8ac"
+    },
+    "2027182": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO WMIC WMI Request Over SMB - Likely Lateral Movement",
+      "logic_sha256": "c5b4775007314de1e176c07345cabcb385b688adbe5f10ddf8a5cb024fd559d9",
+      "raw_sha256": "108d229b8ec1523b81a5a07bc6ab3e6f821be7fb93309a48a03638e0c24e61bf"
+    },
+    "2027183": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Nslookup Command in SMB Traffic - Possible Lateral Movement",
+      "logic_sha256": "9ad2019e28172c6876e65e99e48551bf477767f24228dd90e753bf78581b9019",
+      "raw_sha256": "20318a20cdf69a935756e1b86070732995af1aa2026e24a766b5bc2c0c397c96"
+    },
+    "2027184": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Nslookup Command in SMB Traffic - Possible Lateral Movement",
+      "logic_sha256": "76eaa110b638d07aff5086d3f6c0107f161eadbd79ed4c9974603666e44d556b",
+      "raw_sha256": "437c8380163a5053b6cb65eb1dd60ac8fe5895e8b7a263525c9a849d53438963"
+    },
+    "2027185": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Ipconfig Command in SMB Traffic - Possible Lateral Movement",
+      "logic_sha256": "7f1b5471bcf479a0c245ede0253ceb7c650466c3c817d09faef6575a5326d134",
+      "raw_sha256": "b33ca36ee0b83baccf64dcc48d19acdb40d7cb17f95d5616b55f3bab394f402f"
+    },
+    "2027186": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Ipconfig Command in SMB Traffic - Possible Lateral Movement",
+      "logic_sha256": "1fbbd4f00624b31e0535d6d407bd81d711ca44c20403b35db51e636350d57b5a",
+      "raw_sha256": "de76a18ae1fcc8a50b3bb9c9783cf41fcf65f6676ba17b6f4234a3a11e9c645e"
+    },
+    "2027202": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Powershell Activity Over SMB - Likely Lateral Movement",
+      "logic_sha256": "b705b755a82ebab0e64463edc35fb89a01bd39e1f9bd83d9b0babb17d79789d8",
+      "raw_sha256": "d88af6e316cb5eb76ecaf4b5506269dec0d6870b97c6ad7ba918a69829e9c3b0"
+    },
+    "2027267": {
+      "category": "ET_INFO",
+      "rev": 4,
+      "msg": "ET INFO Possible Lateral Movement - File Creation Request in Remote System32 Directory (T1105)",
+      "logic_sha256": "51e6944792b8609a17ff83f065984ef221fd9f712456331dc46c384ad17358c2",
+      "raw_sha256": "89659a474a1f2a0558d37718a87a226c98322eb6542a3f21b232d0b083214d3d"
+    },
+    "2030524": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Possible NOP Sled Observed in Large DNS over TCP Packet M1",
+      "logic_sha256": "3bcdddf91fa2fc0f1badc3b2b250c786f25aaf57cbdf7a6b0b0c1a771c61975f",
+      "raw_sha256": "ae9ac4a652fbf17769271a32c297539e773992ac96cc260a2fae68840f6d1a37"
+    },
+    "2030525": {
+      "category": "ET_INFO",
+      "rev": 3,
+      "msg": "ET INFO Possible NOP Sled Observed in Large DNS over TCP Packet M2",
+      "logic_sha256": "c6ae709712ca4a08bbd34f9cb9bd53b8678e4e3c5ba5356dcfe7d3a1ac97389d",
+      "raw_sha256": "4998f7412eced80cd97b93c3fa9001be1c4d505c522e2fa4aa1ea83d2c589257"
+    },
+    "2032468": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Killbot JS Configuration - Possible Phishing",
+      "logic_sha256": "ec2107f61bccf14feec5066ea5150b29a931425ccde3d1ed5210497c78383368",
+      "raw_sha256": "2962d9cbaf4547a587477cfe7ed383930391ce0fed13892fe738512fa9ce7f50"
+    },
+    "2035467": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO Remote Desktop AeroAdmin handshake",
+      "logic_sha256": "e2d86fc37edd71156e62d7838909c9fe32d9cb70d887f21fff75cb13b4f49261",
+      "raw_sha256": "56721ed5a50a678c70df9615f882466cc9e913a555910b6466a48e70608166ab"
+    },
+    "2049259": {
+      "category": "ET_INFO",
+      "rev": 2,
+      "msg": "ET INFO F5 BIG-IP - Command Execution via util/bash",
+      "logic_sha256": "6a77cb24158311f5fb2581972562840034263a650bbb3ce4bbe4a6fe639a1163",
+      "raw_sha256": "5b7e9c9dba9cad6b4314e6626086f37ee714a9d7c16f290e213687c221339eba"
+    },
+    "2062639": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Observed dir Command via Inbound ICMP",
+      "logic_sha256": "9adea7a3457152e90398f5654c36ebb9cced7fdf0a53c4fc4d5ed2ad731aed6b",
+      "raw_sha256": "70bb179fd9b2db0e6be8ece7d364ee513ba3f32618c499a8334c6980274e422c"
+    },
+    "2062640": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Observed ipconfig Command via Inbound ICMP",
+      "logic_sha256": "c7176563ee5c81881ac5f53e7a5b4157b9b6f34df77516159f741cebf109aafa",
+      "raw_sha256": "beaa6f0d4290a6c3944828156bf952c9c39a53627840089d03010691a413a791"
+    },
+    "2062641": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Observed netstat Command via Inbound ICMP",
+      "logic_sha256": "ee1aa204090ae76ce68816ab1e5c4d1ef9a3d140d0884e7767665416e2f5f322",
+      "raw_sha256": "00db938151460df3cab36393b6a1eeea17366dc7fb1a08cfdcd2adfef1c2b9c7"
+    },
+    "2062642": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Observed tasklist Command via Inbound ICMP",
+      "logic_sha256": "bfaae4c9065e362c8767d614eb913a9007b8c82b1ea53aecb005c4cdb7397b81",
+      "raw_sha256": "cfedd6500b99d42b5a3c4a5801a8447a723dcc694b7c85e282281fcadac3a4f2"
+    },
+    "2062643": {
+      "category": "ET_INFO",
+      "rev": 1,
+      "msg": "ET INFO Observed powershell Command via Inbound ICMP",
+      "logic_sha256": "6b44c62f0a59ef75229db02e2bb7e76a64c4350bb7ddcc5cdaeabd656245e820",
+      "raw_sha256": "1457e86838a2d7fe0156beaf9ae73e0fca92dc6304c62ed7a6361de730007805"
+    }
+  }
+}

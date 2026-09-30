@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install project and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev]'
+      - name: Compile
+        run: python -m compileall -q src tests
+      - name: Test
+        run: pytest -q
+      - name: Console-script smoke checks
+        run: |
+          suricata-policy-engine-cli --help >/dev/null
+          suricata-policy-engine-explore --help >/dev/null
+          suricata-policy-engine-audit --help >/dev/null
+
+  package-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Build package
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+      - name: Install wheel in a clean virtual environment
+        run: |
+          python -m venv /tmp/spe-smoke
+          /tmp/spe-smoke/bin/python -m pip install --upgrade pip
+          /tmp/spe-smoke/bin/python -m pip install dist/*.whl
+          /tmp/spe-smoke/bin/suricata-policy-engine-cli --help >/dev/null
+          /tmp/spe-smoke/bin/suricata-policy-engine-explore --help >/dev/null
+          /tmp/spe-smoke/bin/suricata-policy-engine-audit --help >/dev/null
+          /tmp/spe-smoke/bin/python -c 'import tui, tune_rules, feed_audit, rule_explorer'
+
+  suricata-compat:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - openeuler/suricata:7.0.8-oe2403lts
+          - openeuler/suricata:8.0.4-oe2403sp4
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify Suricata container and -T support
+        run: |
+          docker pull "${{ matrix.image }}"
+          docker run --rm --entrypoint suricata "${{ matrix.image }}" -V
+          docker run --rm --entrypoint suricata "${{ matrix.image }}" -h | grep -E -- '-T|Test configuration'

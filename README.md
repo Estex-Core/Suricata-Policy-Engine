@@ -70,27 +70,6 @@ suricata-policy-engine-audit --help
 suricata-policy-engine-explore --help
 ```
 
-## Profiles
-
-### Raw
-
-Keeps the original Suricata feed as a baseline.
-
-### Balanced
-
-Production-focused tuning that reduces unnecessary noise while preserving important detections.
-
-### Strict
-
-More aggressive filtering for environments requiring lower alert volume.
-
-### Noisy
-
-Maximum visibility for investigation and threat-hunting environments.
-
-### Lab
-
-Experimental profile for testing new policies and changes.
 
 ## Safety Model
 

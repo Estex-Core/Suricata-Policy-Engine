@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
-sudo rm -f /usr/local/bin/spe
-sudo rm -rf /opt/suricata-policy-engine
+pipx uninstall suricata-policy-engine || true
 
-echo "Removed Suricata Policy Engine"
+for bin in suricata-policy-engine suricata-policy-engine-tui suricata-policy-engine-cli suricata-policy-engine-audit suricata-policy-engine-explore
+do
+  sudo rm -f "/usr/local/bin/$bin"
+done
+
+echo "[+] Removed"

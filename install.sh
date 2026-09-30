@@ -1,14 +1,30 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
-PREFIX=/opt/suricata-policy-engine
-BIN=/usr/local/bin/spe
+echo "[+] Installing Suricata Policy Engine"
 
-sudo mkdir -p "$PREFIX"
-sudo python3 -m venv "$PREFIX/venv"
-sudo "$PREFIX/venv/bin/pip" install --upgrade pip
-sudo "$PREFIX/venv/bin/pip" install .
+if ! command -v pipx >/dev/null 2>&1; then
+  echo "[+] Installing pipx"
+  sudo apt update
+  sudo apt install -y pipx
+fi
 
-sudo ln -sf "$PREFIX/venv/bin/spe" "$BIN"
+pipx install . --force
 
-echo "Installed: $BIN"
+BIN_DIR="/root/.local/bin"
+TARGETS=(
+  suricata-policy-engine
+  suricata-policy-engine-tui
+  suricata-policy-engine-cli
+  suricata-policy-engine-audit
+  suricata-policy-engine-explore
+)
+
+for bin in "${TARGETS[@]}"; do
+  if [ -f "$BIN_DIR/$bin" ]; then
+    sudo ln -sf "$BIN_DIR/$bin" "/usr/local/bin/$bin"
+  fi
+done
+
+echo "[+] Installation complete"
+echo "Run: suricata-policy-engine --help"

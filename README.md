@@ -10,9 +10,9 @@ Have you ever updated your Suricata rules and wondered:
 **"Do I really need all 60,000 rules?"**
 
 Maybe the available resources are not enough for every alert.  
-Maybe you have hundreds of rules enabled for products that do not even exist in your environment.
- Or Maybe your network is not that large.  
-
+Maybe you have hundreds of rules enabled for products that do not even exist in your environment.  
+Maybe your network is not that large.  
+Maybe you want a ruleset that better reflects your actual security priorities.
 
 This is where **SuriTuner** comes in. 😁
 

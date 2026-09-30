@@ -67,21 +67,11 @@ suricata-policy-engine --help
 
 ## Usage
 
-Main commands:
+Main command:
 
 ```bash
 suricata-policy-engine
 ```
-
-Additional tools:
-
-```bash
-suricata-policy-engine-tui
-suricata-policy-engine-cli --help
-suricata-policy-engine-audit --help
-suricata-policy-engine-explore --help
-```
-
 
 ## Safety Model
 

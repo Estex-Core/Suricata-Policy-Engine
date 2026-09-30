@@ -1,5 +1,5 @@
 # Suricata Policy Engine
-![Suricata Policy Engine](docs/social-preview.jpg)
+![Suricata Policy Engine](docs/Banner.jpg)
 
 A policy-driven engine for tuning Suricata rulesets with safe automation, threat-hunting profiles, dependency-aware optimization, and explainable security decisions.
 

@@ -5,6 +5,10 @@ You tell me what you have or want, i narrow down the rules
 
 ## Overview
 
+Have you ever update the suricata rules and wondered that do i really need 60k rule ?! Either the network is not that vast or the resources for every alert is not enough !
+
+Here comes the SuriTuner 😁
+
 Suricata Policy Engine helps security teams manage large Suricata rulesets without manually editing thousands of signatures.
 
 The engine applies explicit policies based on rule categories, asset context, semantic selectors, dependencies, and security requirements to generate optimized rulesets.

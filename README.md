@@ -11,7 +11,7 @@ Have you ever updated your Suricata rules and wondered:
 
 Maybe the available resources are not enough for every alert.  
 Maybe you have hundreds of rules enabled for products that do not even exist in your environment.
-Or Maybe your network is not that large.  
+ Or Maybe your network is not that large.  
 
 
 This is where **SuriTuner** comes in. 😁

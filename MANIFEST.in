@@ -1,8 +1,0 @@
-include README.md
-include CHANGELOG.md
-include RELEASE-NOTES.md
-include GITHUB-RELEASE-CHECKLIST.md
-include LICENSE
-include tuning-policy.yaml
-recursive-include docs *.md *.gif
-recursive-include .github *.md *.yml *.yaml

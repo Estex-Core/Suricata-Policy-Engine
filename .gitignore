@@ -28,8 +28,6 @@ dist/
 
 # Local runtime / audit artifacts
 *.report.json
-suricata-policy-engine-feed-audit.json
-suricata-policy-engine-feed-audit.md
 *.tmp
 *.bak
 

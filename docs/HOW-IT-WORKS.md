@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart TD
-    A[Update Suricata ruleset] --> B[Parse rule + category + metadata]
+    A[Fresh Suricata ruleset] --> B[Parse rule + category + metadata]
     B --> C[Category Mode]
     C -->|PRESERVE_FEED| D[Preserve feed state]
     C -->|DISABLE| E[Disable by policy]

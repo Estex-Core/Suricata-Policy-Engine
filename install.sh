@@ -12,19 +12,18 @@ fi
 pipx install . --force
 
 BIN_DIR="/root/.local/bin"
-TARGETS=(
-  suricata-policy-engine
-  suricata-policy-engine-tui
-  suricata-policy-engine-cli
-  suricata-policy-engine-audit
-  suricata-policy-engine-explore
-)
+MAIN_BIN="suricata-policy-engine"
 
-for bin in "${TARGETS[@]}"; do
-  if [ -f "$BIN_DIR/$bin" ]; then
-    sudo ln -sf "$BIN_DIR/$bin" "/usr/local/bin/$bin"
-  fi
+# Remove any legacy suffixed entry points from older installations.
+rm -f "$BIN_DIR"/suricata-policy-engine-* 2>/dev/null || true
+for bin in /usr/local/bin/suricata-policy-engine-*; do
+  [ -e "$bin" ] || [ -L "$bin" ] || continue
+  sudo rm -f "$bin"
 done
 
+if [ -f "$BIN_DIR/$MAIN_BIN" ]; then
+  sudo ln -sf "$BIN_DIR/$MAIN_BIN" "/usr/local/bin/$MAIN_BIN"
+fi
+
 echo "[+] Installation complete"
-echo "Run: suricata-policy-engine --help"
+echo "Run: suricata-policy-engine"

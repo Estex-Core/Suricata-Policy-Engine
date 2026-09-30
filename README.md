@@ -73,6 +73,7 @@ Main command:
 suricata-policy-engine
 ```
 
+
 ## Safety Model
 
 The engine does not overwrite the original Suricata ruleset by default.
@@ -123,21 +124,12 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-Run tests:
-
-```bash
-pytest
-```
 
 ## Documentation
 
-- [Documentation index](docs/README.md)
 - [How it works](docs/HOW-IT-WORKS.md)
 - [Policy reference](docs/POLICY-REFERENCE.md)
 - [Profiles](docs/PROFILES.md)
-- [Release notes 2.0.0rc2](docs/RELEASE-NOTES-2.0.0rc2.md)
-- [Backend audit 2.0.0b3](docs/BACKEND-AUDIT-2.0.0b3.md)
-- [Current release notes](RELEASE-NOTES.md)
 
 ## Contributing
 

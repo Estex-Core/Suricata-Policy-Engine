@@ -5,7 +5,7 @@ You tell me what you have or want, i narrow down the rules
 
 ## Overview
 
-Have you ever update the suricata rules and wondered that do i really need 60k rule ?! Either the network is not that vast or the resources for every alert is not enough !
+Have you ever update the suricata rules and wondered that do i really need 60k rule ?! Either the network is not that vast or the resources for every alert is not enough ! or even i have 500 rules for a device that i event don't have!
 
 Here comes the SuriTuner 😁
 

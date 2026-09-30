@@ -1485,9 +1485,12 @@ def replace_original_production(candidate_output: Path, candidate_threshold: Pat
         if rc != 0:
             raise RuntimeError("production Suricata test failed after original-rules replacement")
 
-        # Keep one user-visible tuned artifact in sync with the validated replacement.
-        atomic_copy(candidate_output, tuned_output)
         print(f"[REPLACE] FILE OVERWRITTEN: {original_rules}")
+        # Replace means replace: once the original feed file has been atomically
+        # overwritten and validated, do not leave a second tuned rules file beside
+        # it.  A previous validation run may already have created this sidecar.
+        if tuned_output.resolve() != original_rules.resolve():
+            tuned_output.unlink(missing_ok=True)
         if no_reload:
             print("[REPLACE] Validated replacement installed. Live reload skipped by --no-reload.")
             return 0
@@ -1795,8 +1798,9 @@ def main() -> int:
     # path uses --no-state-update and intentionally does not create a duplicate snapshot.
     if not args.no_state_update:
         try:
+            history_rules = args.rules if replace_original else output
             run_dir = history.record_run(
-                history_dir, output=output, threshold=threshold_output, policy=args.policy,
+                history_dir, output=history_rules, threshold=threshold_output, policy=args.policy,
                 report=report_path,
                 diff=(diff_output if validation_result["settings"]["generate_diff_report"] else None),
                 insights=insights_output, telemetry=(telemetry_output if telemetry_result is not None else None),
@@ -1814,9 +1818,6 @@ def main() -> int:
 
     cleanup_legacy_output_sidecars(output)
 
-    if not need_test:
-        print("\nNext validation command:")
-        print(f"sudo python3 {Path(__file__).name} --test")
     return final_rc
 
 

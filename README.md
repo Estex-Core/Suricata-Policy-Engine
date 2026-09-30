@@ -99,7 +99,7 @@ The workflow is designed to keep security decisions:
 
 Decision flow:
 
-```
+```text
 Suricata Feed
       |
       v
@@ -148,7 +148,7 @@ pytest
 - [Release notes 2.0.0rc2](docs/RELEASE-NOTES-2.0.0rc2.md)
 - [Backend audit 2.0.0b3](docs/BACKEND-AUDIT-2.0.0b3.md)
 - [Current release notes](RELEASE-NOTES.md)
-  
+
 ## Contributing
 
 Contributions, improvements, and security feedback are welcome.

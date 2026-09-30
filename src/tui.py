@@ -2028,7 +2028,7 @@ def profile_editor(stdscr, args):
         text_viewer(stdscr, f"Profile / {choice}", lines, "Preview profile values before applying")
         if not changes:
             _record_active_profile(args.policy, choice)
-            text_viewer(stdscr, "Profile", [f"{choice} is already active.", "", "The pointer has been updated."])
+            text_viewer(stdscr, "Profile", [f"{choice} is already active."])
             continue
         if confirm(stdscr, f"Apply profile '{choice}' ({len(changes)} changes)?"):
             try:
@@ -2554,7 +2554,7 @@ def _completed_log_viewer(stdscr, title: str, lines: list[str], rc: int, stage: 
             follow = True
 
 
-def run_with_progress(stdscr, cmd: list[str], title: str) -> tuple[int, list[str]]:
+def run_with_progress(stdscr, cmd: list[str], title: str, context: str | None = None) -> tuple[int, list[str]]:
     """Run a tuner command immediately and retain all output in RAM.
 
     During execution the user can scroll backward through output that has already
@@ -2619,7 +2619,8 @@ def run_with_progress(stdscr, cmd: list[str], title: str) -> tuple[int, list[str
             draw_header(
                 stdscr,
                 title,
-                "Running now — full output is retained in memory.",
+                (f"{context}  |  Running now — full output is retained in memory."
+                 if context else "Running now — full output is retained in memory."),
                 footer,
             )
             elapsed = int(time.monotonic() - started)
@@ -2740,10 +2741,12 @@ def tune_rules_action(stdscr,args):
     if not confirm_tune_policy(stdscr, Path(args.policy)):
         return
 
+    profile_label = _active_policy_label(Path(args.policy))
     rc, tune_log = run_with_progress(
         stdscr,
         tuner_cmd(args,"--test","--no-state-update"),
         "Tune My Rules / Validation",
+        f"Profile: {profile_label}",
     )
     if rc != 0:
         while True:
@@ -3202,18 +3205,56 @@ def collect_sid_audit(args, status_cb=None):
     policy = tuner.core.load_policy(args.policy)
     baseline = resolve_baseline(policy, args.policy)
 
-    status("Reading and parsing current ruleset")
-    rules = tuner.core.load_rules(args.rules)
+    tracked = tuner.tracked_sid_set(policy)
+    tracked_count = len(tracked)
+    status(f"Scanning current feed for {tracked_count:,} tracked SIDs")
 
-    total = len(rules)
-    step = max(1000, total // 20 if total else 1000)
-    status(f"Normalizing logical categories — 0/{total:,}")
-    for idx, rule in enumerate(rules.values(), 1):
+    # Check SIDs does not need the full policy-engine parse performed by Tune My
+    # Rules.  Scan each rule only once, fully materializing the small set of
+    # tracked SIDs.  This avoids parsing flowbits/xbits/metadata for tens of
+    # thousands of unrelated rules just to compare a few fingerprints.
+    rules = {}
+    scanned = 0
+    for raw, enabled in tuner.core.iter_rule_records(args.rules):
+        scanned += 1
+        options = tuner.core.split_rule_options(raw)
+        sid = None
+        rev = 0
+        msg = ""
+        for key, value in options:
+            if value is None:
+                continue
+            if key == "sid":
+                try:
+                    sid = int(value.strip())
+                except ValueError:
+                    sid = None
+            elif key == "rev":
+                try:
+                    rev = int(value.strip())
+                except ValueError:
+                    rev = 0
+            elif key == "msg":
+                msg = tuner.core._unquote_option(value)
+
+        if sid not in tracked:
+            if scanned % 5000 == 0:
+                status(f"Scanning feed — {scanned:,} rules checked; {len(rules):,}/{tracked_count:,} tracked found")
+            continue
+
+        rule = tuner.core.Rule(
+            sid=sid,
+            rev=rev,
+            msg=msg,
+            raw=raw,
+            source_enabled=enabled,
+        )
         rule.category = tuner.core.map_category(rule.msg, policy)
-        if idx == total or idx % step == 0:
-            status(f"Normalizing logical categories — {idx:,}/{total:,}")
+        rules[sid] = rule
+        status(f"Scanning feed — {scanned:,} rules checked; {len(rules):,}/{tracked_count:,} tracked found")
+        if len(rules) == tracked_count:
+            break
 
-    tracked_count = len(tuner.tracked_sid_set(policy))
     status(f"Comparing {tracked_count:,} tracked SID fingerprints")
     audit = tuner.audit_tracked_rules(rules, policy, baseline)
     status("Preparing SID integrity results")

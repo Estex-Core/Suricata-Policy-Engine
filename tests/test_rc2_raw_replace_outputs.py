@@ -76,7 +76,7 @@ def test_replace_reload_failure_leaves_validated_overwrite(monkeypatch, tmp_path
     rc = tune_rules.replace_original_production(candidate, candidate_th, original, tuned, internal_th, conf, False)
     assert rc == 28
     assert original.read_text() == "TUNED\n"
-    assert tuned.read_text() == "TUNED\n"
+    assert not tuned.exists()
     assert "- suricata.rules" in conf.read_text()
 
 

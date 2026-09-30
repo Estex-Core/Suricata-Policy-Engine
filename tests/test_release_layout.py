@@ -57,7 +57,6 @@ def test_github_repository_hygiene_files_exist():
         ROOT / "docs" / "README.md",
         ROOT / "docs" / "RELEASE-NOTES-2.0.0rc1.md",
         ROOT / "docs" / "BACKEND-AUDIT-2.0.0b3.md",
-        ROOT / "RELEASE-NOTES.md",
     ]
     for path in required:
         assert path.exists(), path

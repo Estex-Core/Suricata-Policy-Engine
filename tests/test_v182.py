@@ -127,7 +127,7 @@ def test_replace_original_mode_is_atomic_and_points_config_back_to_original(monk
     )
     assert rc == 0
     assert original.read_text() == "TUNED\n"
-    assert tuned.read_text() == "TUNED\n"
+    assert not tuned.exists()
     assert "- suricata.rules" in config.read_text()
     backups = list((tune_rules.default_state_dir() / "backups").glob("*/original-suricata.rules"))
     assert backups and any(x.read_text() == "RAW-FEED\n" for x in backups)

@@ -207,6 +207,7 @@ def reload_suricata(expected_rules: Optional[Path] = None, expected_config: Opti
     available but the systemd service is active, restart it.  A stopped service
     is not called "live"; the config is left staged for the next start.
     """
+    reload_suricata.last_outcome = "unknown"
     sc = shutil.which("suricatasc")
     if sc:
         print("[DEPLOY] Requesting blocking rule reload with suricatasc...")
@@ -227,6 +228,7 @@ def reload_suricata(expected_rules: Optional[Path] = None, expected_config: Opti
             stats = subprocess.run([sc, "-c", "ruleset-stats"], capture_output=True, text=True)
             if stats.returncode == 0:
                 _print_child_output(stats)
+            reload_suricata.last_outcome = "live"
             print("[DEPLOY] LIVE: blocking Suricata ruleset reload completed.")
             return 0
 
@@ -254,6 +256,7 @@ def reload_suricata(expected_rules: Optional[Path] = None, expected_config: Opti
                         for raw in conflicts:
                             print(f"         runtime config: {raw}", file=sys.stderr)
                         return 10
+                reload_suricata.last_outcome = "live"
                 print("[DEPLOY] LIVE: suricata.service restarted successfully with the verified configuration.")
                 return 0
             return rc or 7
@@ -267,6 +270,7 @@ def reload_suricata(expected_rules: Optional[Path] = None, expected_config: Opti
         )
         return 8
 
+    reload_suricata.last_outcome = "staged"
     print("[DEPLOY] STAGED: configuration points to tuned rules, but no running Suricata instance was found.")
     return 0
 
@@ -341,7 +345,7 @@ def apply_policy(rules, policy):
     unknown_enabled = 0
 
     for rule in rules.values():
-        rule.category = core.map_category(rule.msg, policy)
+        rule.category = core.map_category(rule.msg, policy, rule.metadata)
         if rule.category is None:
             unknown_count += 1
             if rule.source_enabled:
@@ -1116,27 +1120,30 @@ def extract_yaml_scalar(config_text: str, key: str) -> Optional[str]:
 
 
 def patch_rule_files(config: Path, output: Path, replace_names: Optional[set[str]] = None) -> tuple[str, bool]:
-    text = config.read_text(encoding="utf-8")
-    default_rule_path = extract_yaml_scalar(text, "default-rule-path")
+    """Switch one YAML rule-files entry to tuned and remove duplicate managed entries.
+
+    The Suricata source and tuned rule files must never be loaded side by side.
+    Retain unrelated rule-files entries, preserving line comments/formatting.
+    Fail closed for unsupported YAML layouts instead of silently mis-patching.
+    """
+    original = config.read_text(encoding="utf-8")
+    default_rule_path = extract_yaml_scalar(original, "default-rule-path")
     try:
-        use_name = output.name if default_rule_path and output.parent.resolve() == Path(default_rule_path).resolve() else str(output.resolve())
-    except Exception:
+        use_name = (output.name if default_rule_path and
+                    output.parent.resolve() == Path(default_rule_path).resolve()
+                    else str(output.resolve()))
+    except (OSError, RuntimeError):
         use_name = str(output)
     replace_names = set(replace_names or {"suricata.rules", output.name})
-
-    lines = text.splitlines(keepends=True)
-    start = None
-    base_indent = 0
-    for i, line in enumerate(lines):
-        if re.match(r"^\s*rule-files\s*:\s*(?:#.*)?$", line):
-            start = i
-            base_indent = len(line) - len(line.lstrip())
-            break
-    if start is None:
-        raise RuntimeError("Could not find 'rule-files:' in suricata.yaml")
-
-    changed = False
-    found_tuned = False
+    replace_names.add(output.name)
+    lines = original.splitlines(keepends=True)
+    headers = [(i, len(line) - len(line.lstrip())) for i, line in enumerate(lines)
+               if re.match(r"^\s*rule-files\s*:\s*(?:#.*)?$", line)]
+    if len(headers) != 1:
+        raise RuntimeError("Expected exactly one block-style 'rule-files:' list in suricata.yaml")
+    start, base_indent = headers[0]
+    # Do not accept inline YAML or complex list members: unsafe to edit textually.
+    entries = []
     for i in range(start + 1, len(lines)):
         line = lines[i]
         if not line.strip() or line.lstrip().startswith("#"):
@@ -1144,24 +1151,41 @@ def patch_rule_files(config: Path, output: Path, replace_names: Optional[set[str
         indent = len(line) - len(line.lstrip())
         if indent <= base_indent:
             break
-        m = re.match(r"^(\s*)-\s*['\"]?([^'\"#\n]+)['\"]?(\s*(?:#.*)?)$", line.rstrip("\n"))
-        if not m:
+        m = re.match(r"^(\s*)-\s+(['\"]?)([^'\"#\n]+)\2(\s*(?:#.*)?)$", line.rstrip("\n"))
+        if m is None:
+            raise RuntimeError(f"Unsupported rule-files entry at line {i + 1}; configuration unchanged")
+        entries.append((i, m.group(1), m.group(3).strip(), m.group(4)))
+    if not entries:
+        raise RuntimeError("No entries found in rule-files; configuration unchanged")
+
+    managed = [entry for entry in entries if Path(entry[2]).name in replace_names]
+    if not managed:
+        raise RuntimeError("No managed rule-files entry found; configuration unchanged")
+    # Prefer an existing tuned entry; otherwise rewrite the first original entry.
+    tuned = [entry for entry in managed if Path(entry[2]).name == output.name]
+    keep = (tuned or managed)[0]
+    to_delete = {entry[0] for entry in managed if entry[0] != keep[0]}
+    changed = bool(to_delete) or keep[2] != use_name
+    if not changed:
+        return use_name, False
+
+    output_lines = []
+    for i, line in enumerate(lines):
+        if i in to_delete:
             continue
-        value = m.group(2).strip()
-        current_name = Path(value).name
-        if current_name == output.name:
-            found_tuned = True
-        elif current_name in replace_names:
+        if i == keep[0]:
+            _idx, indent, _value, suffix = keep
             newline = "\n" if line.endswith("\n") else ""
-            lines[i] = f"{m.group(1)}- {use_name}{m.group(3)}{newline}"
-            changed = True
-            found_tuned = True
-    if not found_tuned:
-        names = ", ".join(sorted(replace_names))
-        raise RuntimeError(f"No managed rule-files entry ({names}) was found; production config was not changed")
-    if changed:
-        atomic_write_text(config, "".join(lines))
-    return use_name, changed
+            output_lines.append(f"{indent}- {use_name}{suffix}{newline}")
+        else:
+            output_lines.append(line)
+    # Confirm this conversion did not leave another reference to the output
+    # (including a symlink/alternate absolute path) or source in the same list.
+    prospective = "".join(output_lines)
+    # Run validation with the original file untouched first; caller validates
+    # Suricata syntax after the atomic update and rolls back on failure.
+    atomic_write_text(config, prospective)
+    return use_name, True
 
 
 def configured_rule_files(config: Path) -> list[str]:
@@ -1191,25 +1215,25 @@ def configured_rule_files(config: Path) -> list[str]:
 
 
 def config_uses_rule_file(config: Path, output: Path) -> bool:
-    """Verify that suricata.yaml resolves at least one rule-files entry to output."""
+    """Require exactly one tuned rules reference and no original feed alongside it."""
     text = config.read_text(encoding="utf-8")
     default_rule_path = extract_yaml_scalar(text, "default-rule-path")
     base = Path(default_rule_path) if default_rule_path else config.parent
-    try:
-        expected = output.resolve()
-    except Exception:
-        expected = output
+    expected = output.resolve()
+    occurrences = 0
     for raw in configured_rule_files(config):
+        if any(wildcard in raw for wildcard in ("*", "?", "[")):
+            # A wildcard might load the same signature file a second time.
+            return False
         candidate = Path(raw)
         if not candidate.is_absolute():
             candidate = base / candidate
-        try:
-            candidate = candidate.resolve()
-        except Exception:
-            pass
-        if candidate == expected:
-            return True
-    return False
+        if candidate.resolve() == expected:
+            occurrences += 1
+        elif candidate.name == "suricata.rules" and output.name != "suricata.rules":
+            # Even if another directory is used, loading both sides risks SID overlap.
+            return False
+    return occurrences == 1
 
 
 def _running_suricata_cmdlines() -> list[list[str]]:
@@ -1394,6 +1418,7 @@ def deploy_production(candidate_output: Path, candidate_threshold: Path, config:
             raise RuntimeError("production Suricata test failed")
 
         if no_reload:
+            reload_suricata.last_outcome = "staged"
             print("[DEPLOY] Config installed. Reload skipped by --no-reload.")
             return 0
 
@@ -1420,6 +1445,9 @@ def deploy_production(candidate_output: Path, candidate_threshold: Path, config:
             atomic_copy(artifact_threshold, final_threshold_output)
         elif not final_threshold_existed:
             final_threshold_output.unlink(missing_ok=True)
+        if not no_reload and _running_suricata_cmdlines():
+            if reload_suricata(expected_config=config) != 0:
+                print("[DEPLOY] WARNING: restored files but could not verify live rollback.", file=sys.stderr)
         print("[DEPLOY] Rollback completed, including production artifacts.", file=sys.stderr)
         return 22
 
@@ -1492,6 +1520,7 @@ def replace_original_production(candidate_output: Path, candidate_threshold: Pat
         if tuned_output.resolve() != original_rules.resolve():
             tuned_output.unlink(missing_ok=True)
         if no_reload:
+            reload_suricata.last_outcome = "staged"
             print("[REPLACE] Validated replacement installed. Live reload skipped by --no-reload.")
             return 0
 
@@ -1558,6 +1587,7 @@ def cleanup_legacy_output_sidecars(output: Path) -> None:
 
 def main() -> int:
     args = parse_args()
+    reload_suricata.last_outcome = "not_requested"
     replace_original = bool(getattr(args, "replace_original", False))
     final_rc = 0
     if args.deploy and replace_original:
@@ -1787,6 +1817,9 @@ def main() -> int:
             # Finish state/history/output cleanup, then surface the non-zero live status.
             final_rc = 28
 
+    report["activation_state"] = reload_suricata.last_outcome
+    if not args.dry_run:
+        atomic_write_text(report_path, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     # Update comparison baseline only after generation succeeded, and after validation/deploy when requested.
     if not args.no_state_update:
         atomic_write_text(state_file, json.dumps(cur_state, separators=(",", ":")) + "\n")
@@ -1804,7 +1837,7 @@ def main() -> int:
                 report=report_path,
                 diff=(diff_output if validation_result["settings"]["generate_diff_report"] else None),
                 insights=insights_output, telemetry=(telemetry_output if telemetry_result is not None else None),
-                state=state_file, deployed=bool(args.deploy or replace_original), test_passed=bool(need_test),
+                state=state_file, deployed=(reload_suricata.last_outcome == "live"), test_passed=bool(need_test),
                 summary={
                     "feed_enabled": report.get("feed_enabled_before_tuning"),
                     "final_enabled": report.get("final_enabled_rules"),

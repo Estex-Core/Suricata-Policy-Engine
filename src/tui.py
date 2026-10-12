@@ -2970,7 +2970,7 @@ def build_sid_explanation(args, sid: int) -> list[str]:
         return [f"Cannot load policy/rules: {exc}"]
 
     for r in rules.values():
-        r.category = tuner.core.map_category(r.msg, policy)
+        r.category = tuner.core.map_category(r.msg, policy, r.metadata)
     baseline_path = resolve_baseline(policy, args.policy)
     baseline_data = read_json(baseline_path) or {}
     baseline_entry = (baseline_data.get("tracked_rules", {}) or {}).get(str(sid))
@@ -3249,7 +3249,7 @@ def collect_sid_audit(args, status_cb=None):
             raw=raw,
             source_enabled=enabled,
         )
-        rule.category = tuner.core.map_category(rule.msg, policy)
+        rule.category = tuner.core.map_category(rule.msg, policy, rule.metadata)
         rules[sid] = rule
         status(f"Scanning feed — {scanned:,} rules checked; {len(rules):,}/{tracked_count:,} tracked found")
         if len(rules) == tracked_count:

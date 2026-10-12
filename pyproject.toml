@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "suricata-policy-engine"
-version = "2.0.0rc2"
+version = "2.0.0rc3"
 description = "Context-aware Policy-as-Code tuning, explainability, telemetry and safe activation for Suricata rulesets"
 readme = "README.md"
 requires-python = ">=3.10"

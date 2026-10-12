@@ -457,6 +457,9 @@ def validate_policy(data: dict) -> dict:
     asset thresholds and tracked/force SID relationships) so bad policy edits fail
     before any rules are tuned.
     """
+    selection = ((data.get("defaults") or {}).get("dependency_restore") or {}).get("producer_selection", "all")
+    if selection not in {"all", "minimal"}:
+        raise ValueError(f"Invalid dependency_restore.producer_selection: {selection!r}")
     categories = data.get("categories")
     if not isinstance(categories, dict):
         raise ValueError("Invalid policy YAML: missing top-level 'categories' mapping")
@@ -625,24 +628,22 @@ def et_prefix_from_key(key: str) -> Optional[str]:
     return "ET " + key[3:]
 
 
-def map_category(msg: str, policy: dict) -> Optional[str]:
-    categories = policy.get("categories", {})
+def map_category(msg: str, policy: dict, metadata: Optional[dict] = None) -> Optional[str]:
+    """Map reviewed ET/GPL message prefixes, with opt-in trustworthy metadata fallback.
 
+    Never guess from generic classtype or attack_target: those describe behavior,
+    not the ET family. Unknown rules preserve upstream state unless Strict opts out.
+    """
+    categories = policy.get("categories", {})
     if msg == "SURICATA" or msg.startswith("SURICATA "):
         return "SURICATA" if "SURICATA" in categories else None
-
     if msg.startswith("GPL "):
         mapping = policy.get("gpl_category_mapping", {}) or {}
-        # Longest names first so WEB_SPECIFIC_APPS beats WEB_SERVER-like prefixes.
         for raw_name in sorted(mapping, key=len, reverse=True):
             prefix = f"GPL {raw_name}"
             if msg == prefix or msg.startswith(prefix + " "):
                 return mapping[raw_name]
-        return None
-
-    # Match known ET policy category prefixes; longest first prevents ET WEB_SERVER
-    # from accidentally winning over a longer future category.
-    candidates: List[Tuple[str, str]] = []
+    candidates = []
     for key in categories:
         prefix = et_prefix_from_key(key)
         if prefix:
@@ -650,6 +651,13 @@ def map_category(msg: str, policy: dict) -> Optional[str]:
     for prefix, key in sorted(candidates, key=lambda x: len(x[0]), reverse=True):
         if msg == prefix or msg.startswith(prefix + " "):
             return key
+    # Safe fallback: only an explicitly declared metadata category which matches
+    # a configured category exactly, never fuzzy classification.
+    for field in ("rule_category", "signature_category"):
+        for value in (metadata or {}).get(field, []):
+            candidate = str(value).strip().replace(" ", "_").upper()
+            if candidate in categories:
+                return candidate
     return None
 
 
@@ -1289,10 +1297,10 @@ def build_dependency_graph(rules: Dict[int, Rule], policy: Optional[dict] = None
 
 
 def resolve_dependencies(rules: Dict[int, Rule], policy: dict) -> Tuple[Set[int], Set[int], Set[str], Set[str], Set[str], Set[str]]:
-    """Restore dependencies by traversing the explicit SID dependency graph.
+    """Restore required setters; default ALL protects alternate detection paths.
 
-    The public tuple return stays backward compatible.  Detailed graph/edge trace is
-    available through ``build_dependency_graph`` and ``dependency_resolution_trace``.
+    Optional producer_selection=minimal selects only one producer when none is
+    enabled and can reduce coverage. It must be explicitly chosen and reviewed.
     """
     defaults = policy.get("defaults", {}) or {}
     dep_cfg = defaults.get("dependency_restore", {}) or {}
@@ -1300,13 +1308,16 @@ def resolve_dependencies(rules: Dict[int, Rule], policy: dict) -> Tuple[Set[int]
         for r in rules.values():
             r.final_enabled = r.initial_enabled
             r.restored_dependency_types.clear()
+        resolve_dependencies.last_trace = {}
         return set(), set(), set(), set(), set(), set()
+    strategy = dep_cfg.get("producer_selection", "all")
+    if strategy not in {"all", "minimal"}:
+        raise ValueError(f"Invalid dependency_restore.producer_selection: {strategy!r}")
 
     graph = build_dependency_graph(rules, policy)
     req_by_consumer: Dict[int, List[dict]] = defaultdict(list)
     for req in graph["requirements"]:
         req_by_consumer[int(req["consumer_sid"])].append(req)
-
     for r in rules.values():
         r.final_enabled = r.initial_enabled
         r.restored_dependency_types.clear()
@@ -1325,16 +1336,25 @@ def resolve_dependencies(rules: Dict[int, Rule], policy: dict) -> Tuple[Set[int]
         seen_consumers.add(consumer_sid)
         for req in req_by_consumer.get(consumer_sid, []):
             reachable_requirements.append(req)
-            for producer_sid in req["producer_sids"]:
+            producers = list(req["producer_sids"])
+            if strategy == "minimal" and producers:
+                already_enabled = [sid for sid in producers if rules[sid].final_enabled]
+                if already_enabled:
+                    producers = []  # No new setter needs to be restored.
+                else:
+                    # Deterministic, prefer feed-enabled before explicitly retired.
+                    producers = [min(producers, key=lambda sid: (not rules[sid].source_enabled, sid))]
+            for producer_sid in producers:
                 producer = rules.get(producer_sid)
                 if producer is None:
                     continue
+                was_disabled = not producer.final_enabled
                 restoration_edges.append({
                     "consumer_sid": consumer_sid, "producer_sid": producer_sid,
                     "type": req["type"], "requirement": req["requirement"],
-                    "restored": not producer.final_enabled,
+                    "restored": was_disabled,
                 })
-                if not producer.final_enabled:
+                if was_disabled:
                     producer.final_enabled = True
                     producer.restored_dependency_types.add(req["type"])
                     if req["type"] == "flowbits":
@@ -1353,10 +1373,9 @@ def resolve_dependencies(rules: Dict[int, Rule], policy: dict) -> Tuple[Set[int]
         elif req["status"] == "toggle_only":
             (ambiguous_flow if req["type"] == "flowbits" else ambiguous_xbit).add(req["requirement"])
 
-    # Attach the latest resolution trace to the function for callers that need
-    # explainability without changing the long-standing return signature.
     resolve_dependencies.last_trace = {
         **graph,
+        "producer_selection": strategy,
         "reachable_consumer_sids": sorted(seen_consumers),
         "reachable_requirement_count": len(reachable_requirements),
         "restoration_edges": restoration_edges,
@@ -1457,7 +1476,7 @@ def main() -> int:
     unknown_enabled_count = 0
 
     for r in rules.values():
-        r.category = map_category(r.msg, policy)
+        r.category = map_category(r.msg, policy, r.metadata)
         if r.category is None:
             unknown_count += 1
             if r.source_enabled:

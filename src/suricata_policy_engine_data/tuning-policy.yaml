@@ -31,6 +31,8 @@ defaults:
   # so orphan setters or setters used only by disabled rules are not restored unnecessarily.
   dependency_restore:
     enabled: true
+    # all is coverage-preserving (default); minimal trades coverage for fewer enabled rules.
+    producer_selection: all
     only_if_required_by_enabled_rule: true
     run_after_final_policy_resolution: true
 
